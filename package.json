@@ -1,12 +1,15 @@
 {
-  "name": "temp_nextjs",
-  "version": "0.1.0",
+  "name": "simple-todo-app",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup:local": "./scripts/setup-local.sh",
+    "db:studio": "npx prisma studio",
+    "db:reset": "npx prisma db push --force-reset"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.1",

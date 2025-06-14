@@ -138,3 +138,163 @@ npx prisma db push
 # View database in Prisma Studio
 npx prisma studio
 ```
+
+## Local Testing Procedures
+
+### Prerequisites
+Before testing locally, ensure you have Node.js and npm installed.
+
+### 🚀 Quick Start (Automated Setup)
+```bash
+# 1. Automatic local environment setup
+npm run setup:local
+
+# 2. Start development server
+npm run dev
+
+# 3. Open browser to http://localhost:3000
+```
+
+### 🛠️ Manual Setup (Alternative)
+```bash
+# 1. Switch to SQLite schema for local testing
+cp prisma/schema.dev.prisma prisma/schema.prisma
+
+# 2. Generate Prisma client
+npx prisma generate
+
+# 3. Create database tables
+npx prisma db push
+
+# 4. Start development server
+npm run dev
+```
+
+### 📋 Testing Checklist
+
+#### 1. Basic Authentication Flow
+- [ ] **User Registration**:
+  - Navigate to http://localhost:3000
+  - Click "新規登録" (Sign Up)
+  - Enter email: `test@example.com` and password: `password123`
+  - Verify redirect to sign-in page after successful registration
+
+- [ ] **User Login**:
+  - Enter registered email and password
+  - Click "ログイン" (Login)
+  - Verify redirect to dashboard at `/dashboard`
+
+#### 2. Task Management Functionality
+- [ ] **Add Task**:
+  - Enter task title in input field
+  - Click "追加" (Add) button
+  - Verify task appears in list
+
+- [ ] **Toggle Task Completion**:
+  - Click checkbox next to task
+  - Verify task style changes (strikethrough for completed)
+  - Click again to toggle back
+
+- [ ] **Delete Task**:
+  - Click "削除" (Delete) button
+  - Verify task is removed from list
+
+- [ ] **Data Persistence**:
+  - Add several tasks
+  - Refresh page (F5)
+  - Verify all tasks are still present
+
+#### 3. UI/UX Testing
+- [ ] **Responsive Design**:
+  - Test on desktop (1920x1080)
+  - Test on tablet (768x1024)
+  - Test on mobile (375x667)
+  - Verify layout adapts properly
+
+- [ ] **Error Handling**:
+  - Try login with wrong credentials
+  - Verify error message displays
+  - Try adding empty task
+  - Verify validation works
+
+#### 4. Session Management
+- [ ] **Logout Functionality**:
+  - Click "ログアウト" (Logout) button
+  - Verify redirect to sign-in page
+  - Try accessing `/dashboard` directly
+  - Verify redirect to sign-in (protected route)
+
+- [ ] **Session Persistence**:
+  - Login successfully
+  - Close browser tab
+  - Reopen and navigate to localhost:3000
+  - Verify automatic redirect to dashboard (session maintained)
+
+### 🔧 Development Commands
+```bash
+# View database contents
+npm run db:studio
+
+# Reset database (clear all data)
+npm run db:reset
+
+# Run ESLint checks
+npm run lint
+
+# Build for production (test build process)
+npm run build
+
+# Start production build locally
+npm run start
+```
+
+### 🗄️ Local Database
+- **Type**: SQLite
+- **Location**: `./prisma/dev.db`
+- **Management**: Accessible via `npm run db:studio`
+- **Reset**: Use `npm run db:reset` to clear all data
+
+### 🚨 Common Issues & Solutions
+
+#### Database Connection Error
+```bash
+# Regenerate Prisma client
+npx prisma generate
+npx prisma db push
+```
+
+#### Port 3000 Already in Use
+```bash
+# Use different port
+npm run dev -- -p 3001
+```
+
+#### Module Not Found Errors
+```bash
+# Clean install dependencies
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### 🔄 Switching Back to Production
+After local testing, restore production database schema:
+```bash
+# Restore MySQL schema for production
+cp prisma/schema.prod.prisma prisma/schema.prisma
+
+# Or manually change provider in schema.prisma:
+# datasource db {
+#   provider = "mysql"
+#   url      = env("DATABASE_URL")
+#   relationMode = "prisma"
+# }
+```
+
+### ✅ Test Completion Criteria
+Local testing is complete when:
+- All authentication flows work correctly
+- All task management operations function properly
+- UI is responsive across different screen sizes
+- Data persists correctly after page refresh
+- Error handling works as expected
+- Build process completes without errors
