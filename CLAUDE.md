@@ -342,3 +342,35 @@ cp prisma/schema.prod.prisma prisma/schema.prisma
 
 #### Version History
 - **2025-01-15**: Fixed Vercel build error by adding postinstall script for Prisma client generation
+
+## Accessing the Deployed Application
+
+### Production Access
+After successful Vercel deployment, the application is accessible at:
+
+**Primary URL**: `https://simple-todo-app.vercel.app`
+
+### Finding Your Application URL
+1. **Vercel Dashboard Method**:
+   - Visit https://vercel.com/dashboard
+   - Select your `simple-todo-app` project
+   - Click "Visit" button or copy the displayed URL
+
+2. **GitHub Integration**:
+   - Check "Environments" section in your GitHub repository
+   - Look for "Production" deployment link
+
+### Post-Deployment Testing Checklist
+- [ ] **URL Access**: Verify application loads without errors
+- [ ] **User Registration**: Test signup functionality with real email
+- [ ] **Authentication**: Verify login/logout flow works correctly
+- [ ] **Task Management**: Test add/delete/toggle completion features
+- [ ] **Data Persistence**: Confirm tasks save properly to production database
+- [ ] **Responsive Design**: Test on multiple devices and screen sizes
+- [ ] **Security**: Verify HTTPS connection and secure cookie handling
+
+### Production Environment Verification
+- Database connectivity to PlanetScale MySQL
+- Environment variables properly configured in Vercel
+- Prisma client generation successful in build process
+- All API endpoints responding correctly

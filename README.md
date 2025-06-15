@@ -133,6 +133,61 @@ npx prisma db push
 - Verify task management functionality
 - Check responsive design on different devices
 
+## 🌐 Accessing the Live Application
+
+### Production URL
+Once deployed to Vercel, your application will be available at:
+- **Primary URL**: `https://simple-todo-app.vercel.app`
+- **Alternative URL**: `https://simple-todo-app-[random-id].vercel.app`
+
+### How to Find Your Application URL
+
+#### Method 1: Vercel Dashboard
+1. Go to https://vercel.com/dashboard
+2. Click on your **simple-todo-app** project
+3. Click the **"Visit"** button or copy the displayed URL
+4. The URL will be shown at the top of the project page
+
+#### Method 2: Vercel CLI (if installed)
+```bash
+vercel --prod
+```
+
+#### Method 3: GitHub Repository
+- Check the **"Environments"** section in your GitHub repository
+- Look for the **"Production"** deployment link
+
+### Testing the Live Application
+
+Once you access the live URL, test these features:
+
+#### 🔐 Authentication Test
+1. **Sign Up**: Click "新規登録" (Sign Up)
+   - Enter a valid email address
+   - Create a strong password
+   - Verify successful registration
+
+2. **Sign In**: Use your registered credentials
+   - Verify redirect to dashboard
+   - Check session persistence
+
+#### ✅ Task Management Test
+1. **Add Tasks**: Create new todo items
+2. **Toggle Completion**: Mark tasks as done/undone
+3. **Delete Tasks**: Remove completed tasks
+4. **Data Persistence**: Refresh page to verify data saves
+
+#### 📱 Device Compatibility Test
+- **Desktop**: Full feature access
+- **Tablet**: Responsive layout
+- **Mobile**: Touch-friendly interface
+
+### 🔒 Security Features
+- HTTPS encryption for all data transmission
+- Secure password hashing with bcrypt
+- HttpOnly cookies for session management
+- Protected API endpoints with authentication
+
 ## 🚨 Troubleshooting
 
 ### Vercel Build Errors
