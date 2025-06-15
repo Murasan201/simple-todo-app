@@ -298,3 +298,47 @@ Local testing is complete when:
 - Data persists correctly after page refresh
 - Error handling works as expected
 - Build process completes without errors
+
+## Vercel Deployment Issues & Solutions
+
+### Prisma Build Error on Vercel
+
+#### Problem
+Vercel caches dependencies which prevents Prisma's auto-generation from being triggered, leading to build failures with the error:
+```
+Prisma has detected that this project was built on Vercel, which caches dependencies. 
+This leads to an outdated Prisma Client because Prisma's auto-generation isn't triggered. 
+To fix this, make sure to run the `prisma generate` command during the build process.
+```
+
+#### Solution
+Add a `postinstall` script to package.json to ensure Prisma client generation:
+
+```json
+{
+  "scripts": {
+    "postinstall": "prisma generate"
+  }
+}
+```
+
+#### Required Environment Variables for Vercel
+Ensure these environment variables are set in your Vercel dashboard:
+```env
+DATABASE_URL="mysql://username:password@host:port/database_name"
+NEXTAUTH_URL="https://your-app-domain.vercel.app"
+NEXTAUTH_SECRET="your-production-secret-key"
+NODE_ENV="production"
+```
+
+#### Schema Configuration
+- **Local Development**: Use `prisma/schema.dev.prisma` (SQLite)
+- **Production**: Use `prisma/schema.prod.prisma` (MySQL with PlanetScale)
+
+Before deploying to production, ensure the main schema points to MySQL:
+```bash
+cp prisma/schema.prod.prisma prisma/schema.prisma
+```
+
+#### Version History
+- **2025-01-15**: Fixed Vercel build error by adding postinstall script for Prisma client generation

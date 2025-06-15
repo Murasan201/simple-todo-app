@@ -194,6 +194,34 @@
 - ⏳ タスクの並び替え機能
 - ⏳ タスクのカテゴリ分類
 
+### Version 1.0.2 バグ修正（2025-01-15）
+
+#### 🐛 解決した問題
+- **Vercelビルドエラー**: PrismaクライアントのキャッシュによるVercelでのビルド失敗を修正
+  
+#### 🔧 実施した対策
+1. **package.jsonに`postinstall`スクリプト追加**:
+   ```json
+   {
+     "scripts": {
+       "postinstall": "prisma generate"
+     }
+   }
+   ```
+
+2. **Prismaスキーマ設定の明確化**:
+   - ローカル開発: `prisma/schema.dev.prisma` (SQLite)
+   - 本番環境: `prisma/schema.prod.prisma` (MySQL + PlanetScale)
+
+3. **ドキュメント更新**:
+   - CLAUDE.mdにVercelデプロイメント問題の解決策を追加
+   - README.mdにトラブルシューティングセクションを拡充
+
+#### 🎯 修正効果
+- Vercelでの自動デプロイが正常に動作
+- 本番環境でのPrismaクライアント生成が確実に実行される
+- 開発者向けトラブルシューティング情報の充実
+
 ---
 
 以上がシンプルToDoアプリの要件定義書です。ご確認ください。

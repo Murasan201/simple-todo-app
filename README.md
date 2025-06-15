@@ -133,6 +133,41 @@ npx prisma db push
 - Verify task management functionality
 - Check responsive design on different devices
 
+## 🚨 Troubleshooting
+
+### Vercel Build Errors
+
+#### Prisma Client Generation Error
+**Error**: `Prisma has detected that this project was built on Vercel, which caches dependencies...`
+
+**Solution**: 
+1. Ensure `postinstall` script is added to package.json:
+```json
+{
+  "scripts": {
+    "postinstall": "prisma generate"
+  }
+}
+```
+
+2. Verify production schema is used:
+```bash
+cp prisma/schema.prod.prisma prisma/schema.prisma
+```
+
+3. Check Vercel environment variables:
+```env
+DATABASE_URL="mysql://username:password@host/database_name"
+NEXTAUTH_URL="https://your-domain.vercel.app"
+NEXTAUTH_SECRET="secure-production-secret"
+NODE_ENV="production"
+```
+
+#### Database Connection Issues
+- Verify PlanetScale database is running and accessible
+- Check DATABASE_URL format and credentials
+- Ensure database schema is deployed: `npx prisma db push`
+
 ## 📋 Environment Variables
 
 ### Local Development (.env.local)
