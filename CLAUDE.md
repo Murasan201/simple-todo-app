@@ -342,6 +342,59 @@ cp prisma/schema.prod.prisma prisma/schema.prisma
 
 #### Version History
 - **2025-01-15**: Fixed Vercel build error by adding postinstall script for Prisma client generation
+- **2025-01-15**: Migrated from PlanetScale to Neon PostgreSQL for cost-effective solution
+
+## Database Configuration (Neon PostgreSQL)
+
+### Neon Integration Setup
+1. **Vercel Marketplace Integration**:
+   - Access Vercel Dashboard → Project → Integrations
+   - Search and add "Neon" integration
+   - Follow setup wizard for automatic configuration
+
+2. **Database Initialization**:
+   - Access Neon Dashboard → SQL Editor
+   - Execute schema initialization script:
+   ```sql
+   CREATE TABLE IF NOT EXISTS users (
+       id SERIAL PRIMARY KEY,
+       email VARCHAR(255) UNIQUE NOT NULL,
+       "passwordHash" VARCHAR(255) NOT NULL,
+       "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+       "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+
+   CREATE TABLE IF NOT EXISTS tasks (
+       id SERIAL PRIMARY KEY,
+       "userId" INTEGER NOT NULL,
+       title VARCHAR(255) NOT NULL,
+       done BOOLEAN DEFAULT FALSE,
+       "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+       "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+       FOREIGN KEY ("userId") REFERENCES users(id) ON DELETE CASCADE
+   );
+   ```
+
+### Database Migration Notes
+- **From**: PlanetScale MySQL (discontinued free tier)
+- **To**: Neon PostgreSQL (free tier available)
+- **Changes**: Updated Prisma schema provider from `mysql` to `postgresql`
+- **Benefits**: No credit card required, 512MB storage, 3GB transfer/month
+
+### Troubleshooting Database Issues
+#### Error: "The table 'public.users' does not exist"
+**Root Cause**: Database schema not initialized after Neon integration
+
+**Solution Steps**:
+1. Verify Neon integration in Vercel dashboard
+2. Check `DATABASE_URL` environment variable is set
+3. Run schema initialization SQL in Neon console
+4. Redeploy application if needed
+
+#### Common Issues
+- **Japanese comments in SQL**: Remove non-ASCII characters from SQL queries
+- **Missing tables**: Ensure initialization script completed successfully
+- **Connection errors**: Verify Neon database is active and accessible
 
 ## Accessing the Deployed Application
 

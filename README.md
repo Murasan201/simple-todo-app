@@ -20,7 +20,7 @@ A modern, responsive todo application built with Next.js, TypeScript, and Tailwi
 
 - **Frontend**: Next.js 15.3.3 (App Router), React 19.0.0, TypeScript 5.x
 - **Styling**: Tailwind CSS 4.x
-- **Database**: Prisma ORM with MySQL (PlanetScale) / SQLite (local)
+- **Database**: Prisma ORM with PostgreSQL (Neon) / SQLite (local)
 - **Authentication**: Custom session management with httpOnly cookies
 - **Security**: bcryptjs for password hashing
 - **Deployment**: Vercel (production), Local development with SQLite
@@ -120,13 +120,40 @@ NEXTAUTH_SECRET="your-production-secret-key"
 NODE_ENV="production"
 ```
 
-### 3. Set Up PlanetScale Database
-1. Create a new database on PlanetScale
-2. Copy the connection string to `DATABASE_URL`
-3. Deploy schema to production:
-```bash
-npx prisma db push
-```
+### 3. Set Up Neon Database
+1. **Add Neon Integration via Vercel Marketplace**:
+   - Go to Vercel Dashboard → Your Project
+   - Navigate to Integrations → Browse Marketplace
+   - Search for "Neon" and click "Add Integration"
+   - Follow the setup wizard to create a free PostgreSQL database
+
+2. **Alternative: Manual Neon Setup**:
+   - Visit https://neon.tech and sign up with GitHub
+   - Create a new project and database
+   - Copy the connection string to `DATABASE_URL` in Vercel
+
+3. **Initialize Database Schema**:
+   - Access Neon Dashboard → SQL Editor
+   - Run the initialization script:
+   ```sql
+   CREATE TABLE IF NOT EXISTS users (
+       id SERIAL PRIMARY KEY,
+       email VARCHAR(255) UNIQUE NOT NULL,
+       "passwordHash" VARCHAR(255) NOT NULL,
+       "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+       "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+
+   CREATE TABLE IF NOT EXISTS tasks (
+       id SERIAL PRIMARY KEY,
+       "userId" INTEGER NOT NULL,
+       title VARCHAR(255) NOT NULL,
+       done BOOLEAN DEFAULT FALSE,
+       "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+       "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+       FOREIGN KEY ("userId") REFERENCES users(id) ON DELETE CASCADE
+   );
+   ```
 
 ### 4. Verify Deployment
 - Test user registration and login
@@ -219,9 +246,18 @@ NODE_ENV="production"
 ```
 
 #### Database Connection Issues
-- Verify PlanetScale database is running and accessible
-- Check DATABASE_URL format and credentials
-- Ensure database schema is deployed: `npx prisma db push`
+**Error**: `The table 'public.users' does not exist in the current database`
+
+**Solution**:
+1. **Check Neon Integration**: Ensure Neon is properly connected to your Vercel project
+2. **Initialize Database Schema**: Run the SQL initialization script in Neon Dashboard → SQL Editor
+3. **Verify Environment Variables**: Confirm `DATABASE_URL` is set in Vercel
+4. **Manual Schema Deployment**: Run `npx prisma db push` locally if needed
+
+#### Neon-Specific Issues
+- **Free Tier Limits**: 512MB storage, 3GB transfer/month
+- **Connection Pooling**: Neon automatically handles connections
+- **Branch Database**: Ensure you're using the correct branch in Neon Dashboard
 
 ## 📋 Environment Variables
 
@@ -235,11 +271,28 @@ NODE_ENV="development"
 
 ### Production (Vercel)
 ```env
-DATABASE_URL="mysql://username:password@host/database_name"
+DATABASE_URL="postgresql://username:password@host/database_name" # Automatically set by Neon integration
 NEXTAUTH_URL="https://your-domain.vercel.app"
 NEXTAUTH_SECRET="secure-production-secret"
 NODE_ENV="production"
 ```
+
+## 🗄️ Database Information
+
+### Neon PostgreSQL (Production)
+- **Service**: [Neon](https://neon.tech) - Serverless PostgreSQL
+- **Free Tier**: 512MB storage, 3GB data transfer/month
+- **Features**: 
+  - Instant branching for development
+  - Automatic scaling to zero
+  - Point-in-time recovery
+  - Built-in connection pooling
+
+### Integration Benefits
+- **One-click setup** via Vercel Marketplace
+- **Automatic environment variables** configuration
+- **No credit card required** for free tier
+- **Seamless scaling** as your app grows
 
 ## 📖 API Documentation
 
